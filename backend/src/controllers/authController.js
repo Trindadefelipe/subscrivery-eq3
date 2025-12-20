@@ -1,6 +1,9 @@
 import db from '../config/db.js';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
+import jwt from 'jsonwebtoken';
+
+
 
 export const cadastro = async (req, res) => {
     const { nome_completo, email, senha, cpf, telefone } = req.body;
@@ -18,24 +21,43 @@ export const cadastro = async (req, res) => {
     }
 };
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
 export const login = async (req, res) => {
     const { email, senha } = req.body;
     try {
         const [rows] = await db.execute("SELECT * FROM usuario WHERE email = ?", [email]);
+        
         if (rows.length === 0) {
             return res.status(401).json({ erro: "E-mail ou senha incorretos." });
         }
-        const user = rows[0];
-        const senhaValida = await bcrypt.compare(senha, user.senha_hash);
-        if (!senhaValida) {
+
+        const usuario = rows[0];
+        const senhaCorreta = await bcrypt.compare(senha, usuario.senha_hash);
+
+        if (!senhaCorreta) {
             return res.status(401).json({ erro: "E-mail ou senha incorretos." });
         }
-        res.json({ 
-            mensagem: "Login realizado com sucesso!", 
-            usuario: { id: user.id_usuario, nome: user.nome_completo } 
+
+        // GERANDO O TOKEN JWT 
+        const token = jwt.sign(
+            { id: usuario.id_usuario, email: usuario.email },
+            JWT_SECRET,
+            { expiresIn: '24h' } 
+        );
+
+    
+        res.json({
+            mensagem: "Login realizado com sucesso!",
+            token, 
+            usuario: {
+                id: usuario.id_usuario,
+                nome: usuario.nome_completo,
+                email: usuario.email
+            }
         });
     } catch (err) {
-        res.status(500).json({ erro: "Erro interno no servidor." });
+        res.status(500).json({ erro: "Erro no servidor." });
     }
 };
 
@@ -57,7 +79,7 @@ export const esqueciSenha = async (req, res) => {
             [token, expiracao, email]
         );
 
-       
+        // Aqui você usaria o Nodemailer para enviar o e-mail
         // const link = `http://localhost:5173/redefinir-senha/${token}`;
         
         res.json({ mensagem: "Link de recuperação gerado! " });
