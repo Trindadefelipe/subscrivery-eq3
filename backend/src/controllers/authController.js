@@ -50,14 +50,14 @@ export const esqueciSenha = async (req, res) => {
         }
 
         const token = crypto.randomBytes(20).toString('hex');
-        const expiracao = new Date(Date.now() + 3600000); // 1 hora de validade
+        const expiracao = new Date(Date.now() + 3600000); 
 
         await db.execute(
             "UPDATE usuario SET token_recuperacao = ?, data_expiracao_token = ? WHERE email = ?",
             [token, expiracao, email]
         );
 
-        // Aqui você usaria o Nodemailer para enviar o e-mail
+       
         // const link = `http://localhost:5173/redefinir-senha/${token}`;
         
         res.json({ mensagem: "Link de recuperação gerado! " });
