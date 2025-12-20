@@ -88,3 +88,6 @@ CREATE TABLE pagamento (
     fk_pedidos_id_pedidos INT NOT NULL,
     FOREIGN KEY (fk_pedidos_id_pedidos) REFERENCES pedidos(id_pedidos)
 );
+
+ALTER TABLE usuario ADD COLUMN email_validado BOOLEAN DEFAULT FALSE;
+ALTER TABLE usuario ADD COLUMN token_validacao VARCHAR(255);
