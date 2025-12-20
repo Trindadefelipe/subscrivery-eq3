@@ -60,13 +60,7 @@ export default function Register() {
 
     try {
       const nome_completo = `${name} ${lastName}`;
-<<<<<<< HEAD
-
-      // Enviando apenas os campos que existem no seu formulário
-      const resposta = await axios.post('http://localhost:3000/auth/cadastro', {
-=======
       const resposta = await axios.post('http://localhost:3000/usuarios', {
->>>>>>> e15e67b021d5a45e3ba6b8b4a7f332e7d6d2a99f
         nome_completo: nome_completo,
         email: email,
         senha: password,
