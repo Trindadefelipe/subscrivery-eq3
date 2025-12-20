@@ -1,15 +1,14 @@
-import { useAuth } from "../../contexts/AuthContext";
-import { useNavigate } from "react-router-dom";
-
 import "./Header.css"
 
 export default function Header(value) {
     return(
-        <header>
+        <header className="search-header">
+            <div></div>
             <input 
                 type="text"
                 placeholder="Pesquisar"
             />
+            <div></div>
         </header>
     )
 }

@@ -8,6 +8,7 @@ import Plans from "../pages/Plans/Plans";
 import Subscribe from "../pages/Subscribe/Subscribe";
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Layout from "../components/Layout/Layout";
+import ResetPassword from "../pages/ResetPassword/ResetPassword";
 
 export function AppRoutes() {
     return (
@@ -20,13 +21,25 @@ export function AppRoutes() {
                 <Route path="/Welcome" element={<Welcome />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+
+                <Route
+                    path="/home"
+                    element={
+                        <PrivateRoute>
+                            <Layout>
+                                <Dashboard />
+                            </Layout>
+                        </PrivateRoute>
+                    }
+                />
 
                 <Route
                     path="/plans"
                     element={
                         <PrivateRoute>
                             <Layout>
-                                <Dashboard />
+                                <Plans />
                             </Layout>
                         </PrivateRoute>
                     }
