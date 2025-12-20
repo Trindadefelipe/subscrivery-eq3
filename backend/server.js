@@ -33,10 +33,10 @@ app.post('/usuarios', async (req, res) => {
         await db.execute(query, [nome_completo, email, cpf, telefone, senha_hash]);
         res.status(201).json({ mensagem: "Usuário cadastrado com sucesso!" });
     } catch (err) {
-        // MUITO IMPORTANTE: Isso vai mostrar o erro real no seu terminal do VS Code
+
         console.error("ERRO REAL DO BANCO:", err); 
         
-        // Retorna o erro real para a tela para sabermos o que é
+ 
         res.status(500).json({ erro: "Erro técnico: " + err.message });
     }
 });

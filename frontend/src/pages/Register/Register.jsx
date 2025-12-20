@@ -60,21 +60,19 @@ export default function Register() {
 
     try {
       const nome_completo = `${name} ${lastName}`;
-
-      // Enviando apenas os campos que existem no seu formulário
       const resposta = await axios.post('http://localhost:3000/usuarios', {
         nome_completo: nome_completo,
         email: email,
         senha: password,
         telefone: phone,
-        cpf: null // Como não tem campo de CPF ainda, enviamos como null (vazio aceitável)
+        cpf: null 
       });
 
       alert(resposta.data.mensagem);
       navigate("/plans");
 
     } catch (err) {
-      // Agora o erro virá detalhado se algo falhar
+      
       setError(err.response?.data?.erro || "Erro ao conectar com o servidor");
     }
   }
