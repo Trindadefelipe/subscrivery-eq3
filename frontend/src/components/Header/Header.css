@@ -1,12 +1,4 @@
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: var(--spacing-sm);
-}
-
-strong {
-    font-family: var(--font-family-title);
-    font-size: var(--font-size-3xl);
-    color: var(--color-primary);
+    background-color: var(--color-gray);
+    padding: 0 var(--spacing-3);
 }
