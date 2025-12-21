@@ -44,3 +44,36 @@ export const listarAssinaturaUsuario = async (req, res) => {
         res.status(500).json({ erro: "Erro ao buscar assinatura." });
     }
 };
+
+export const atualizarStatusAssinatura = async (req, res) => {
+    const { id_assinatura, novoStatus } = req.body;
+    const id_usuario = req.usuarioId; 
+
+
+    const statusPermitidos = ['ativo', 'pausado', 'cancelado'];
+    if (!statusPermitidos.includes(novoStatus)) {
+        return res.status(400).json({ erro: "Status inválido. Use: ativo, pausado ou cancelado." });
+    }
+
+    try {
+
+        const [assinatura] = await db.execute(
+            "SELECT id_assinatura FROM assinatura WHERE id_assinatura = ? AND id_usuario = ?",
+            [id_assinatura, id_usuario]
+        );
+
+        if (assinatura.length === 0) {
+            return res.status(404).json({ erro: "Assinatura não encontrada ou você não tem permissão." });
+        }
+
+
+        await db.execute(
+            "UPDATE assinatura SET status = ? WHERE id_assinatura = ?",
+            [novoStatus, id_assinatura]
+        );
+
+        res.json({ mensagem: `Assinatura ${novoStatus === 'pausado' ? 'pausada' : 'cancelada'} com sucesso!` });
+    } catch (err) {
+        res.status(500).json({ erro: "Erro ao atualizar status: " + err.message });
+    }
+};
