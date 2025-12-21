@@ -1,7 +1,6 @@
 import db from '../config/db.js';
 
 export const buscarFornecedores = async (req, res) => {
-    // Pegamos a cidade e categoria dos query params
     const { cidade, id_categoria } = req.query;
 
     try {
@@ -19,8 +18,14 @@ export const buscarFornecedores = async (req, res) => {
         }
 
         const [rows] = await db.execute(sql, params);
+   
+        if (rows.length === 0) {
+            return res.status(200).json({ mensagem: "Nenhum fornecedor encontrado nesta região/categoria.", dados: [] });
+        }
+
         res.json(rows);
     } catch (err) {
+        console.error("Erro na busca:", err); 
         res.status(500).json({ erro: "Erro ao buscar fornecedores parceiros." });
     }
 };
