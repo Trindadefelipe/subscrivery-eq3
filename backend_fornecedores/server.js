@@ -1,13 +1,16 @@
 import express from 'express';
+import cors from 'cors';
 import 'dotenv/config';
-import cors from 'cors'; // Importante para o React conseguir falar com o Node
+import usuarioRoutes from './src/routes/usuarioRoutes.js';
 
 const app = express();
 app.use(express.json());
-app.use(cors()); // Libera o acesso para o seu frontend_fornecedores
+app.use(cors());
 
-const PORT = 3001; // Porta diferente do backend do cliente (3000)
+app.use(usuarioRoutes);
 
-app.get('/', (req, res) => res.send("API Fornecedores Rodando! 🚀"));
+const PORT = 3001;
 
-app.listen(PORT, () => console.log(`Servidor de Fornecedores na porta ${PORT}`));
+app.get('/', (req, res) => res.send("API Fornecedores Organizada! 🚀"));
+
+app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
