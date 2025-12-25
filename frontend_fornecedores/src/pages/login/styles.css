@@ -17,7 +17,7 @@
 }
 
 .header-purple {
-  background-color: #013D3B;
+  background-color: #5a2d82;;
   width: 100%;
   padding: 40px 20px;
   display: flex;
@@ -76,7 +76,7 @@
 .login-form button {
   width: 100%;
   padding: 16px;
-  background-color: #00B894;
+  background-color: #5a2d82f7;;
   color: white;
   border: none;
   border-radius: 8px;
@@ -134,4 +134,43 @@
   .box-illustration {
     display: none; 
   }
+}
+
+/* Container que envolve o input e o ícone */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center; /* Centraliza verticalmente os itens internos */
+  width: 100%;
+}
+
+/* O input deve ocupar todo o espaço e ter um respiro para o ícone */
+.password-wrapper input {
+  width: 100% !important;
+  padding-right: 45px !important; /* Aumentamos o recuo para o ícone não bater no texto */
+  margin-bottom: 0 !important; /* Removemos a margem inferior aqui para não quebrar o alinhamento do ícone */
+}
+
+/* Estilização refinada do ícone (olhinho) */
+.toggle-password {
+  position: absolute;
+  right: 12px; /* Espaçamento da borda direita do input */
+  top: 50%; /* Move para o meio */
+  transform: translateY(-50%); /* Ajuste fino para centralização perfeita */
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 1.1rem; /* Tamanho proporcional */
+  z-index: 2; /* Garante que fique acima do input */
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.toggle-password:hover {
+  color: #5a2d82;
+}
+
+/* Ajuste na margem do formulário para compensar a falta de margem no input */
+.login-form .password-wrapper {
+  margin-bottom: 15px; 
 }

@@ -14,15 +14,15 @@ export const obterEstatisticas = async (req, res) => {
       [idFornecedor]
     );
 
- 
+
     const [entregasRota] = await db.execute(
-      "SELECT COUNT(*) as total FROM pedidos WHERE data_entrega IS NULL AND fk_fornecedor_id_fornecedor = ?", 
+      "SELECT COUNT(*) as total FROM pedidos p WHERE p.fk_fornecedor_id_fornecedor = ? AND( SELECT status FROM status_pedidos WHERE fk_pedidos_id_pedidos = p.id_pedidos ORDER BY data_evento DESC LIMIT 1 ) IN('Pendente', 'Em Rota')",
       [idFornecedor]
     );
 
 
     const [pedidosConcluidos] = await db.execute(
-      "SELECT COUNT(*) as total FROM pedidos WHERE data_entrega IS NOT NULL AND fk_fornecedor_id_fornecedor = ?", 
+      "SELECT COUNT(*) as total FROM pedidos WHERE data_entrega IS NOT NULL AND fk_fornecedor_id_fornecedor = ?",
       [idFornecedor]
     );
 
@@ -46,12 +46,11 @@ export const listarEntregasRecentes = async (req, res) => {
   }
 
   try {
-  
+
     const [entregas] = await db.execute(`
-      SELECT 
+    SELECT 
         p.id_pedidos AS id, 
         p.data_compra AS data,
-        -- Buscamos o nome do cliente via assinatura ainda, pois o cliente é quem assina
         (SELECT u.nome_completo FROM usuario u 
          INNER JOIN assinatura a ON u.id_usuario = a.fk_usuario_id_usuario 
          WHERE a.id_assinatura = p.fk_assinatura_id_assinatura LIMIT 1) AS cliente,
@@ -59,11 +58,18 @@ export const listarEntregasRecentes = async (req, res) => {
           (SELECT status FROM status_pedidos WHERE fk_pedidos_id_pedidos = p.id_pedidos ORDER BY data_evento DESC LIMIT 1),
           IF(p.data_entrega IS NULL, 'Pendente', 'Entregue')
         ) AS status
-      FROM pedidos p
-      WHERE p.fk_fornecedor_id_fornecedor = ?
-      ORDER BY p.data_compra DESC
-      LIMIT 5
-    `, [idFornecedor]);
+    FROM pedidos p
+    WHERE p.fk_fornecedor_id_fornecedor = ?
+    -- REGRA DE EXCLUSÃO VISUAL: 
+    -- Não mostramos na pauta de 'Recentes' o que já foi finalizado (Entregue)
+    AND p.id_pedidos NOT IN (
+        SELECT fk_pedidos_id_pedidos 
+        FROM status_pedidos 
+        WHERE status = 'Entregue'
+    )
+    ORDER BY p.data_compra DESC
+    LIMIT 5
+`, [idFornecedor]);
 
     res.json(entregas);
   } catch (err) {

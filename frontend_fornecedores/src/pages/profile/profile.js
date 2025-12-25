@@ -1,60 +1,128 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../../services/api.js';
-import './profile.css';
-import '../Dashboard/dashboard.css';
 import logoImg from '../../assets/logo.png';
+import '../Dashboard/dashboard.css';
+import './profile.css';
 
 const Profile = () => {
   const navigate = useNavigate();
-  const [usuario, setUsuario] = useState({ nome: 'Ivone Santana' });
-  const [fornecedor, setFornecedor] = useState(null);
+  const [fornecedor, setFornecedor] = useState({
+    nome_fantasia: '', razao_social: '', cnpj: '', status: '', foto_url: ''
+  });
+  const [usuario, setUsuario] = useState({ nome: '', foto: '' });
+  const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [showSenhaModal, setShowSenhaModal] = useState(false);
+  const [senhas, setSenhas] = useState({ atual: '', nova: '', confirma: '' });
+
+  const buscarDados = async () => {
+    try {
+      const sessao = JSON.parse(localStorage.getItem('usuarioLogado'));
+      if (sessao?.id) {
+        setUsuario(sessao);
+        const response = await api.get(`/fornecedores/perfil/${sessao.id}`);
+        setFornecedor(response.data);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { buscarDados(); }, []);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        return alert("Arquivo muito grande. Limite de 2MB.");
+      }
+
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Converte para string Base64
+      reader.onloadend = async () => {
+        const base64data = reader.result;
+        try {
+          // Atualiza no Banco de Dados
+          await api.put(`/fornecedores/perfil/${fornecedor.id_fornecedor}`, {
+            ...fornecedor,
+            foto_url: base64data
+          });
+
+          setFornecedor(prev => ({ ...prev, foto_url: base64data }));
+
+          // Atualiza a Sessão para o Header
+          const novaSessao = { ...usuario, foto: base64data };
+          localStorage.setItem('usuarioLogado', JSON.stringify(novaSessao));
+          setUsuario(novaSessao);
+
+          alert("Identidade Visual atualizada!");
+        } catch (error) {
+          alert("Erro ao salvar imagem. Verifique o LONGTEXT no banco.");
+        }
+      };
+    }
+  };
+
+  const handleSalvar = async () => {
+    try {
+      await api.put(`/fornecedores/perfil/${fornecedor.id_fornecedor}`, {
+        nome_fantasia: fornecedor.nome_fantasia,
+        razao_social: fornecedor.razao_social,
+        cnpj: fornecedor.cnpj,
+        foto_url: fornecedor.foto_url
+      });
+      const sessaoAtualizada = {
+        ...usuario,
+        nome: fornecedor.nome_fantasia
+      };
+      localStorage.setItem('usuarioLogado', JSON.stringify(sessaoAtualizada));
+      setUsuario(sessaoAtualizada);
+
+      alert("Informações retificadas com sucesso!");
+      setIsEditing(false);
+    } catch (error) {
+      alert("Erro ao averbar alterações.");
+    }
+  };
+
+  const handleAlterarSenha = async (e) => {
+    e.preventDefault();
+    if (senhas.nova !== senhas.confirma) return alert("Divergência nas senhas.");
+    try {
+      await api.patch(`/fornecedores/perfil/${fornecedor.id_fornecedor}/alterar-senha`, {
+        senhaAtual: senhas.atual, novaSenha: senhas.nova
+      });
+      alert("Senha alterada!");
+      setShowSenhaModal(false);
+      setSenhas({ atual: '', nova: '', confirma: '' });
+    } catch (error) {
+      alert("Falha na segurança.");
+    }
+  };
 
   const handleLogout = () => {
     localStorage.removeItem('usuarioLogado');
     navigate('/');
   };
 
-  useEffect(() => {
-    const buscarDadosFornecedor = async () => {
-      try {
-        const dadosStorage = JSON.parse(localStorage.getItem('usuarioLogado'));
-        if (dadosStorage) {
-          setUsuario(dadosStorage);
-          // Chamada para a rota que configuramos no Backend
-          const response = await api.get(`/fornecedores/perfil/${dadosStorage.id}`);
-          setFornecedor(response.data);
-        }
-      } catch (error) {
-        console.error("Erro na instrução processual (busca no banco):", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    buscarDadosFornecedor();
-  }, []);
-
-  if (loading) return <div className="loading">Consultando registros...</div>;
+  if (loading) return <div className="loading">Consultando autos...</div>;
 
   return (
     <div className="dashboard-container">
-      <header className="top-header">
-        <div className="header-brand">
-          <img src={logoImg} alt="Logo" />
-          <span>subscrivery</span>
-        </div>
-        <div className="header-actions">
-          <div className="header-icons desktop-only">
-            <span className="icon-item"><i className="fas fa-bell"></i></span>
-            <span className="icon-item"><i className="fas fa-cog"></i></span>
+      <header className="top-header" style={{ backgroundColor: '#5a2d82' }}>
+        <div className="header-brand"><img src={logoImg} alt="Logo" /><span>subscrivery</span></div>
+        <div className="header-user">
+          <span className="user-name">{fornecedor.nome_fantasia || usuario.nome}</span>
+          <div className="avatar-icon" style={{ overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {(fornecedor.foto_url || usuario.foto) ? (
+              <img src={fornecedor.foto_url || usuario.foto} alt="Header" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            ) : (
+              <i className="fas fa-user"></i>
+            )}
           </div>
-          <Link to="/profile" className="header-user-link" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <div className="header-user">
-              <span className="user-name">{fornecedor?.nome_fantasia || usuario.nome}</span>
-              <div className="avatar-icon"><i className="fas fa-user"></i></div>
-            </div>
-          </Link>
         </div>
       </header>
 
@@ -63,12 +131,11 @@ const Profile = () => {
           <nav className="sidebar-nav">
             <ul>
               <li><Link to="/dashboard"><i className="fas fa-chart-line"></i> Dashboard</Link></li>
-              <li><i className="fas fa-box"></i> Pedidos</li>
-              <li><i className="fas fa-truck"></i> Entregas</li>
-              <li><i className="fas fa-users"></i> Clientes</li>
-              <li><i className="fas fa-file-alt"></i> Relatórios</li>
+              <li><Link to="/pedidos"><i className="fas fa-box"></i> Pedidos</Link></li>
+              <li><Link to="/produtos"><i className="fas fa-box-open"></i> Produtos</Link></li>
+              <li><Link to="/relatorios"><i className="fas fa-file-alt"></i> Relatórios</Link></li>
               <li className="active"><Link to="/profile"><i className="fas fa-user-circle"></i> Perfil</Link></li>
-              <li onClick={handleLogout} style={{ cursor: 'pointer', marginTop: '20px', color: '#ff7675' }}>
+              <li onClick={handleLogout} style={{ cursor: 'pointer', color: '#ef4444' }}>
                 <i className="fas fa-sign-out-alt"></i> Sair
               </li>
             </ul>
@@ -76,53 +143,54 @@ const Profile = () => {
         </aside>
 
         <main className="dashboard-main">
-          <div className="profile-layout" style={{ display: 'flex', gap: '25px' }}>
+          <div className="profile-layout-grid">
             <div className="profile-card identity-card">
-              <div className="avatar-wrapper">
-                <div className="avatar-circle"><i className="fas fa-camera"></i></div>
+              <div className="avatar-wrapper" onClick={() => document.getElementById('fileInput').click()} style={{ cursor: 'pointer' }}>
+                <div className="avatar-circle">
+                  {fornecedor.foto_url ? (
+                    <img src={fornecedor.foto_url} alt="Perfil" style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }} />
+                  ) : (
+                    <i className="fas fa-camera"></i>
+                  )}
+                </div>
+                <input type="file" id="fileInput" style={{ display: 'none' }} accept="image/*" onChange={handleFileChange} />
               </div>
-              <h2 className="profile-name">{fornecedor?.nome_fantasia || usuario.nome}</h2>
+              <h2 className="profile-name">{fornecedor.nome_fantasia}</h2>
               <span className="profile-badge">Administrador Master</span>
-              <p className="profile-subtext">ID do Fornecedor: #{fornecedor?.id_fornecedor || 'N/A'}</p>
-              <p className="profile-subtext">CNPJ: {fornecedor?.cnpj || 'Não informado'}</p>
-              <button onClick={handleLogout} className="btn-outline" style={{ marginTop: '20px', width: '100%', borderColor: '#ff7675', color: '#ff7675' }}>
-                Encerrar Sessão
+              <p className="profile-subtext">ID: #{fornecedor.id_fornecedor}</p>
+              <button onClick={() => setShowSenhaModal(true)} className="btn-encerrar" style={{ color: '#5a2d82', borderColor: '#5a2d82', marginBottom: '10px' }}>
+                Alterar Senha
               </button>
+              <button onClick={handleLogout} className="btn-encerrar">Encerrar Sessão</button>
             </div>
 
-            <div className="profile-details" style={{ flex: 1 }}>
+            <div className="profile-details-column">
               <div className="profile-card info-section">
                 <div className="section-header">
-                  <h3>Informações da Razão Social</h3>
-                  <button className="btn-edit"><i className="fas fa-edit"></i> Editar</button>
+                  <h3>Dados da Razão Social</h3>
+                  {!isEditing ? (
+                    <button className="btn-edit-profile" onClick={() => setIsEditing(true)}><i className="fas fa-edit"></i> Editar</button>
+                  ) : (
+                    <div className="btn-group-edit">
+                      <button className="btn-save-profile" onClick={handleSalvar}>Salvar</button>
+                      <button className="btn-cancel-profile" onClick={() => setIsEditing(false)}>Cancelar</button>
+                    </div>
+                  )}
                 </div>
-                <div className="input-field">
-                  <label>Razão Social</label>
-                  <input type="text" value={fornecedor?.razao_social || ''} readOnly />
-                </div>
-                <div className="input-field">
-                  <label>Nome Fantasia</label>
-                  <input type="text" value={fornecedor?.nome_fantasia || ''} readOnly />
-                </div>
-                <div className="input-field">
-                  <label>Status da Conta</label>
-                  <input
-                    type="text"
-                    value={fornecedor?.status?.toUpperCase() || 'ATIVO'}
-                    className={fornecedor?.status === 'ativo' ? 'status-ativo' : 'status-inativo'}
-                    readOnly
-                  />
-                </div>
-              </div>
 
-              <div className="profile-card security-section" style={{ marginTop: '20px' }}>
-                <div className="section-header">
-                  <h3>Segurança e Credenciais</h3>
-                  <button className="btn-outline">Alterar Senha</button>
-                </div>
-                <div className="input-field">
-                  <label>CNPJ Vinculado (Chave Única)</label>
-                  <input type="text" value={fornecedor?.cnpj || ''} readOnly />
+                <div className="inputs-grid">
+                  <div className="input-field">
+                    <label>Razão Social</label>
+                    <input type="text" value={fornecedor.razao_social} readOnly={!isEditing} onChange={e => setFornecedor({ ...fornecedor, razao_social: e.target.value })} className={isEditing ? "edit-mode" : ""} />
+                  </div>
+                  <div className="input-field">
+                    <label>Nome Fantasia</label>
+                    <input type="text" value={fornecedor.nome_fantasia} readOnly={!isEditing} onChange={e => setFornecedor({ ...fornecedor, nome_fantasia: e.target.value })} className={isEditing ? "edit-mode" : ""} />
+                  </div>
+                  <div className="input-field">
+                    <label>CNPJ</label>
+                    <input type="text" value={fornecedor.cnpj} readOnly={!isEditing} onChange={e => setFornecedor({ ...fornecedor, cnpj: e.target.value })} className={isEditing ? "edit-mode" : ""} />
+                  </div>
                 </div>
               </div>
             </div>
@@ -130,10 +198,37 @@ const Profile = () => {
         </main>
       </div>
 
+      {showSenhaModal && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3>Alterar Senha</h3>
+            <form onSubmit={handleAlterarSenha}>
+              <div className="input-field">
+                <label>Senha Atual</label>
+                <input type="password" required value={senhas.atual} onChange={e => setSenhas({ ...senhas, atual: e.target.value })} />
+              </div>
+              <div className="input-field">
+                <label>Nova Senha</label>
+                <input type="password" required value={senhas.nova} onChange={e => setSenhas({ ...senhas, nova: e.target.value })} />
+              </div>
+              <div className="input-field">
+                <label>Confirmar Nova Senha</label>
+                <input type="password" required value={senhas.confirma} onChange={e => setSenhas({ ...senhas, confirma: e.target.value })} />
+              </div>
+              <div className="btn-group-edit">
+                <button type="submit" className="btn-save-profile">Confirmar</button>
+                <button type="button" className="btn-cancel-profile" onClick={() => setShowSenhaModal(false)}>Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <nav className="mobile-tab-bar mobile-only">
-        <Link to="/dashboard" className="tab-item"><i className="fas fa-chart-line"></i><span>Início</span></Link>
-        <div className="tab-item"><i className="fas fa-box"></i><span>Pedidos</span></div>
-        <div className="tab-item" onClick={handleLogout}><i className="fas fa-sign-out-alt"></i><span>Sair</span></div>
+        <Link to="/dashboard" className="tab-item"><i className="fas fa-chart-line"></i><span>Dashboard</span></Link>
+        <Link to="/pedidos" className="tab-item "><i className="fas fa-solid fa-dolly"></i><span>Pedidos</span></Link>
+        <Link to="/produtos" className="tab-item"><i className="fas fa-box"></i><span>Produtos</span></Link>
+        <Link to="/relatorios" className="tab-item"><i className="fas fa-file-alt"></i><span>Relatórios</span></Link>
         <Link to="/profile" className="tab-item active"><i className="fas fa-user"></i><span>Perfil</span></Link>
       </nav>
     </div>

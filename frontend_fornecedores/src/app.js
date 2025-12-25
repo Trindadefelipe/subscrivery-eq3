@@ -3,8 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import Login from './pages/login/Login.js';
 import Cadastro from './pages/cadastro/cadastro.js';
 import Dashboard from './pages/Dashboard/Dashboard.js'; 
-// Adicione a extensão .js explicitamente para sanar o erro do Webpack
 import Profile from './pages/profile/profile.js'; 
+import Pedidos from './pages/pedidos/Pedidos.js'; 
+import Produtos from './pages/produtos/produtos.js';
+import Relatorios from './pages/relatorio/Relatorios.js';
 
 const PrivateRoute = ({ children }) => {
   const usuarioLogado = localStorage.getItem('usuarioLogado');
@@ -16,9 +18,10 @@ function App() {
     <Router>
       <div className="App">
         <Routes>
+         
           <Route path="/" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
-          
+        
           <Route 
             path="/dashboard" 
             element={
@@ -28,7 +31,6 @@ function App() {
             } 
           />
 
-          {/* Averbação da rota de Perfil sob proteção da PrivateRoute */}
           <Route 
             path="/profile" 
             element={
@@ -37,6 +39,35 @@ function App() {
               </PrivateRoute>
             } 
           />
+
+    
+          <Route 
+            path="/pedidos" 
+            element={
+              <PrivateRoute>
+                <Pedidos />
+              </PrivateRoute>
+            } 
+          />
+
+          <Route 
+            path="/produtos" 
+            element={
+              <PrivateRoute>
+                <Produtos />
+              </PrivateRoute>
+            } 
+          />
+
+          <Route 
+            path="/relatorios" 
+            element={
+              <PrivateRoute>
+                <Relatorios />
+              </PrivateRoute>
+            } 
+          />
+
         </Routes>
       </div>
     </Router>

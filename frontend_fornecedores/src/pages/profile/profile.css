@@ -1,180 +1,216 @@
 /* Container Principal - Fundo neutro para ressaltar as informações */
 .profile-container {
-  padding: 40px;
-  background-color: #f3f4f6;
-  min-height: calc(100vh - 65px); /* Ajuste para descontar o Header */
-  font-family: 'Inter', sans-serif;
+    padding: 40px;
+    background-color: #f3f4f6;
+    min-height: calc(100vh - 65px);
+    font-family: 'Inter', sans-serif;
 }
 
-.profile-layout {
-  display: flex;
-  gap: 30px;
-  max-width: 1200px;
-  margin: 0 auto;
+/* Layout em Grid para maior controle processual do espaço */
+.profile-layout-grid {
+    display: grid;
+    grid-template-columns: 350px 1fr;
+    gap: 25px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-/* Estilização dos Cards (Blocos de Informação) */
+/* Estilização dos Cards */
 .profile-card {
-  background: white;
-  border-radius: 15px;
-  padding: 30px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
-  border: 1px solid #e5e7eb;
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    border: 1px solid #e5e7eb;
 }
 
-/* Coluna da Esquerda - Identidade Funcional */
+/* Coluna da Esquerda - Identidade */
 .identity-card {
-  flex: 1;
-  max-width: 350px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: fit-content;
 }
 
 .avatar-wrapper {
-  position: relative;
-  margin-bottom: 20px;
+    position: relative;
+    margin-bottom: 20px;
 }
 
 .avatar-circle {
-  width: 160px;
-  height: 160px;
-  background-color: #004d40; /* Verde escuro institucional */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: 45px;
-  cursor: pointer;
-  transition: 0.3s;
+    width: 150px;
+    height: 150px;
+    background-color: #5a2d82; 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 5px solid #f3f4f6;
 }
 
 .avatar-circle:hover {
-  filter: brightness(1.2);
+    transform: scale(1.05);
+    filter: brightness(1.1);
 }
 
 .profile-name {
-  font-size: 1.5rem;
-  color: #1a1a1a;
-  margin-bottom: 5px;
-  font-weight: 700;
+    font-size: 1.4rem;
+    color: #111827;
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
 .profile-badge {
-  background-color: #004d40; /* Badge Administrador Master */
-  color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: bold;
-  margin-bottom: 15px;
+    background-color: #f3e8ff; 
+    color: #5a2d82;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-transform: uppercase;
 }
 
 .profile-subtext {
-  color: #6b7280;
-  font-size: 0.9rem;
-  margin-bottom: 5px;
+    color: #6b7280;
+    font-size: 0.85rem;
+    margin-bottom: 6px;
 }
 
-/* Coluna da Direita - Detalhes e Segurança */
-.profile-details {
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-  gap: 25px;
+/* Coluna da Direita - Detalhes */
+.profile-details-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
 .section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 15px;
 }
 
 .section-header h3 {
-  font-size: 1.25rem;
-  color: #111827;
-  font-weight: 700;
+    font-size: 1.1rem;
+    color: #111827;
+    font-weight: 700;
 }
 
-/* Campos de Entrada (Input) - Estilo Formal */
+/* Campos de Entrada e Grade de Inputs */
+.inputs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
 .input-field {
-  margin-bottom: 18px;
+    margin-bottom: 5px;
 }
 
 .input-field label {
-  display: block;
-  font-size: 0.85rem;
-  color: #374151;
-  margin-bottom: 6px;
-  font-weight: 600;
+    display: block;
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-bottom: 6px;
+    font-weight: 700;
+    text-transform: uppercase;
 }
 
 .input-field input {
-  width: 100%;
-  padding: 12px;
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  color: #4b5563;
-  font-size: 1rem;
-  outline: none;
+    width: 100%;
+    padding: 12px 15px;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    color: #374151;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
 }
 
-/* Botões de Ação Institucionais */
-.btn-edit {
-  background-color: #004d40;
-  color: white;
-  border: none;
-  padding: 10px 22px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: 0.3s;
+/* Modo de Edição (Visto de Correção) */
+.edit-mode {
+    background-color: #ffffff !important;
+    border-color: #5a2d82 !important;
+    box-shadow: 0 0 0 3px rgba(90, 45, 130, 0.1);
+    outline: none;
 }
 
-.btn-edit:hover {
-  background-color: #00332b;
+/* Botões de Ação */
+.btn-group-edit {
+    display: flex;
+    gap: 10px;
 }
 
-.btn-outline {
-  background: white;
-  border: 1px solid #d1d5db;
-  padding: 10px 20px;
-  border-radius: 8px;
-  color: #374151;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.3s;
+.btn-edit-profile {
+    background-color: #5a2d82;
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: 0.2s;
 }
 
-.btn-outline:hover {
-  background-color: #f3f4f6;
+.btn-save-profile {
+    background-color: #10b981; /* Verde Sucesso */
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-
-.status-ativo {
-  border-left: 4px solid #00B894 !important;
-  font-weight: bold;
+.btn-cancel-profile {
+    background-color: #ef4444; /* Vermelho Erro/Cancelar */
+    color: white;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
 }
 
-.status-inativo {
-  border-left: 4px solid #ef4444 !important;
+.btn-encerrar {
+    width: 100%;
+    margin-top: 25px;
+    padding: 12px;
+    border: 2px solid #fee2e2;
+    color: #ef4444;
+    background: #fff;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: 0.2s;
 }
 
+.btn-encerrar:hover {
+    background-color: #ef4444;
+    color: white;
+    border-color: #ef4444;
+}
 
+/* Responsividade (O Juízo de Admissibilidade Móvel) */
+@media (max-width: 900px) {
+    .profile-layout-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .identity-card {
+        max-width: 100%;
+    }
 
-@media (max-width: 768px) {
-  .profile-layout {
-    flex-direction: column;
-  }
-  
-  .identity-card {
-    max-width: 100%;
-  }
+    .profile-container {
+        padding: 20px 15px 100px;
+    }
 }

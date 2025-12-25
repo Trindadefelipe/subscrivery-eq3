@@ -120,7 +120,7 @@ const Cadastro = () => {
         </form>
 
         <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '14px' }}>
-          Já tem uma conta? <Link to="/" style={{ color: '#00B894', fontWeight: 'bold', textDecoration: 'none' }}>Faça login.</Link>
+          Já tem uma conta? <Link to="/" style={{ color: '#5a2d82', fontWeight: 'bold', textDecoration: 'none' }}>Faça login.</Link>
         </p>
       </main>
     </div>

@@ -1,30 +1,24 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; //
-import api from '../../services/api.js'; //
+import { Link, useNavigate } from 'react-router-dom';
+import api from '../../services/api.js';
 import './styles.css';
-import iconeFundo from '../../assets/iconi_fundo.png';
 import logoImg from '../../assets/logo.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
   const [erro, setErro] = useState('');
+  const [mostrarSenha, setMostrarSenha] = useState(false); // Estado para o "olhinho"
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     setErro('');
-
     try {
-
       const response = await api.post('/login', { email, senha });
-
-
       if (response.status === 200) {
-
         localStorage.setItem('usuarioLogado', JSON.stringify(response.data.usuario));
         navigate('/dashboard');
-        
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
@@ -38,7 +32,7 @@ const Login = () => {
   return (
     <div className="login-page">
       <div className="header-purple">
-        <h1><img src={logoImg} alt="Subscrivery Logo" className="logo-header" />  subscrivery</h1>
+        <h1><img src={logoImg} alt="Subscrivery Logo" className="logo-header" /> subscrivery</h1>
         <p>Sua vida, sem a complicação do mercado.</p>
       </div>
 
@@ -58,17 +52,24 @@ const Login = () => {
           />
 
           <label>Senha</label>
-          <input
-            type="password"
-            placeholder="Sua senha"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-            required
-          />
-
+          <div className="password-wrapper">
+            <input
+              type={mostrarSenha ? "text" : "password"} // Alterna o tipo de input
+              placeholder="Sua senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              required
+            />
+            <span 
+              className="toggle-password" 
+              onClick={() => setMostrarSenha(!mostrarSenha)}
+            >
+              <i className={`fas ${mostrarSenha ? 'fa-eye-slash' : 'fa-eye'}`}></i>
+            </span>
+          </div>
 
           {erro && (
-            <p style={{ color: '#ef4444', fontSize: '13px', marginBottom: '15px', fontWeight: 'bold', textAlign: 'center' }}>
+            <p className="error-message">
               {erro}
             </p>
           )}
@@ -77,7 +78,7 @@ const Login = () => {
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
-          <a href="#" style={{ color: '#013D3B', textDecoration: 'none', fontSize: '14px' }}>
+          <a href="#" style={{ color: '#5a2d82', textDecoration: 'none', fontSize: '14px' }}>
             Esqueceu sua senha?
           </a>
         </div>
@@ -85,14 +86,12 @@ const Login = () => {
         <div style={{ textAlign: 'center', marginTop: '25px', borderTop: '1px solid #E5E7EB', paddingTop: '20px' }}>
           <p style={{ fontSize: '14px', color: '#4B5563' }}>
             Novo por aqui?{' '}
-            <Link to="/cadastro" style={{ color: '#00B894', fontWeight: 'bold', textDecoration: 'none' }}>
+            <Link to="/cadastro" style={{ color: '#5a2d82', fontWeight: 'bold', textDecoration: 'none' }}>
               Crie sua conta.
             </Link>
           </p>
         </div>
       </div>
-
-      
     </div>
   );
 };
