@@ -4,11 +4,14 @@ import { PrivateRoute } from "./PrivateRoute";
 import Welcome from "../pages/Welcome/Welcome"
 import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
+import Home from "../pages/Home/Home";
 import Plans from "../pages/Plans/Plans";
-import Subscribe from "../pages/Subscribe/Subscribe";
-import Dashboard from "../pages/Dashboard/Dashboard";
 import Layout from "../components/Layout/Layout";
 import ResetPassword from "../pages/ResetPassword/ResetPassword";
+import Category from "../pages/Category/Category";
+import Product from "../pages/Product/Product";
+import Account from "../pages/Account/Account";
+import { CheckoutRoutes } from './CheckoutRoutes';
 
 export function AppRoutes() {
     return (
@@ -28,7 +31,51 @@ export function AppRoutes() {
                     element={
                         <PrivateRoute>
                             <Layout>
-                                <Dashboard />
+                                <Home />
+                            </Layout>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/conta"
+                    element={
+                        <PrivateRoute>
+                            <Layout>
+                                <Account />
+                            </Layout>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/categoria/:id"
+                    element={
+                        <PrivateRoute>
+                            <Layout>
+                                <Category />
+                            </Layout>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/produto/:id"
+                    element={
+                        <PrivateRoute>
+                            <Layout>
+                                <Product />
+                            </Layout>
+                        </PrivateRoute>
+                    }
+                />
+
+                <Route
+                    path="/checkout/*"
+                    element={
+                        <PrivateRoute>
+                            <Layout>
+                                <CheckoutRoutes />
                             </Layout>
                         </PrivateRoute>
                     }
@@ -40,28 +87,6 @@ export function AppRoutes() {
                         <PrivateRoute>
                             <Layout>
                                 <Plans />
-                            </Layout>
-                        </PrivateRoute>
-                    }
-                />
-
-                <Route
-                    path="/Subscribe"
-                    element={
-                        <PrivateRoute>
-                            <Layout>
-                                <Subscribe />
-                            </Layout>
-                        </PrivateRoute>
-                    }
-                />
-
-                <Route
-                    path="/Dashboard"
-                    element={
-                        <PrivateRoute>
-                            <Layout>
-                                <Dashboard />
                             </Layout>
                         </PrivateRoute>
                     }

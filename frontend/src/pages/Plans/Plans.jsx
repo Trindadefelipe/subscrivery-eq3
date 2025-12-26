@@ -1,33 +1,94 @@
-import Button from '../../components/Button/Button';
-import './Plans.css';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { api } from "../../services/api";
+import styles from "./Plans.module.css";
 
 export default function Plans() {
-    return (
-        <main className='plans-body'>
-            <div className='plan-card'>
-                <h2 className='plan-title'>Start</h2>
-                <span className='plan-price'>R$ 49,90/mês</span>
-                <p className='plan-text'>até R$ 200 em produtos/mês</p>
-            </div>
-            <div className='plan-card'>
-                <h2 className='plan-title'>Plus</h2>
-                <span className='plan-price'>R$ 89,90/mês</span>
-                <p className='plan-text'>até R$ 400 em produtos/mês</p>
-            </div>
-            <div className='plan-card'>
-                <h2 className='plan-title'>Ultra</h2>
-                <span className='plan-price'>R$ 149,90/mês</span>
-                <p className='plan-text'>até R$ 700 em produtos/mês</p>
-            </div>
+  const navigate = useNavigate();
+  const [plans, setPlans] = useState([]);
+  const [selected, setSelected] = useState(null);
 
-            <p>Seu plano vai ser renovado mensalmente de forma automática a menos que você cancele sua assinatura.</p>
+  useEffect(() => {
+    async function loadPlans() {
+      const res = await api.get("/plans");
+      setPlans(res.data);
 
-            <div className="links-container">
-                <a href="#termos">Termos & condições</a>
-                <a href="#privacidade">Política de Privacidade</a>
-            </div>
+      const recommended = res.data.find(p => p.highlight);
+      setSelected(recommended?.id);
+    }
 
-            <Button className="btn-secondary">Assinar</Button>
-        </main>
-    )
+    loadPlans();
+  }, []);
+
+  function handleSubscribe() {
+    if (!selected) return;
+    // fluxo real: salvar escolha e seguir checkout
+    navigate("/checkout");
+  }
+
+  return (
+    <div className={styles.container}>
+
+      {/* HEADER */}
+      <header className={styles.header}>
+        <button onClick={() => navigate(-1)}>←</button>
+        <span>Faça seu pedido</span>
+        <span>?</span>
+      </header>
+
+      {/* INTRO */}
+      <section className={styles.intro}>
+        <strong>Seja membro</strong>
+        <p>
+          Julia, simplifique sua rotina e economize tempo com o clube
+          que abastece sua casa!
+        </p>
+      </section>
+
+      {/* PLANOS */}
+      <section className={styles.plans}>
+        {plans.map(plan => (
+          <div
+            key={plan.id}
+            className={`${styles.card} ${
+              plan.highlight ? styles.highlight : ""
+            } ${selected === plan.id ? styles.selected : ""}`}
+            onClick={() => setSelected(plan.id)}
+          >
+            <h2>{plan.name}</h2>
+
+            <ul>
+              {plan.benefits.map((item, index) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+
+            <strong>
+              R$ {plan.price.toFixed(2).replace(".", ",")}/mês
+            </strong>
+          </div>
+        ))}
+      </section>
+
+      {/* TERMOS */}
+      <p className={styles.terms}>
+        Ao assinar, você concorda com os Termos e Condições do
+        Subscribery Club. A assinatura continuará válida até ser
+        cancelada.
+      </p>
+
+      {/* CTA */}
+      <button className={styles.subscribe} onClick={handleSubscribe}>
+        Assinar
+      </button>
+
+      <span
+        className={styles.skip}
+        onClick={() => navigate("/checkout")}
+      >
+        Não obrigatório(a). Fechar pedido
+      </span>
+
+    </div>
+  );
 }

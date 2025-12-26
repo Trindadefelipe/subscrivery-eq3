@@ -7,15 +7,11 @@
     color: var(--color-text-primary);
 }
 
+html {
+    font-size: 16px;
+}
+
 body {
     font-family: var(--font-family-base);
-}
-
-h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-family-heading);
-}
-
-h1 {
-    font-size: var(--font-size-title);
-    color: var(--color-text-heading);
+    background-color: #f8f8f8;
 }

@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
-import "./Login.css";
+import styles from "./Login.module.css";
+
+import VoltarIcon from "../../assets/icons/ROXO/VOLTAR.svg";
+import AjudaIcon from "../../assets/icons/ROXO/AJUDA.svg"
 
 export default function Login() {
     const [step, setStep] = useState(1);
@@ -34,7 +37,7 @@ export default function Login() {
             setError("");
             login(resposta.data.usuario);
             alert(resposta.data.mensagem);
-            navigate("/plans");
+            navigate("/home");
 
         } catch (err) {
 
@@ -83,18 +86,20 @@ export default function Login() {
     }
 
     return (
-        <div className="login-container">
-            <header className="login-header">
+        <div className={styles.loginContainer}>
+            <header className={styles.loginHeader}>
                 <button className="back-btn" onClick={handleBack}>
-                    ←
+                    <img src={VoltarIcon} alt="botão de voltar" />
                 </button>
                 <span>Login</span>
-                <button className="help-btn">?</button>
+                <button className="help-btn">
+                    <img src={AjudaIcon} alt="" />
+                </button>
             </header>
 
             {step === 1 && (
-                <div className="login-container">
-                    <div className="container">
+                <div className={styles.loginContent}>
+                    <div className={styles.container}>
 
                         <h1>Qual é seu e-mail?</h1>
 
@@ -108,18 +113,18 @@ export default function Login() {
                             }}
                         />
 
-                        {error && <span className="error">{error}</span>}
+                        {error && <span className={styles.error}>{error}</span>}
                     </div>
 
-                    <Button className="btn-primary" onClick={handleNext}>
+                    <Button variant={'primary'} onClick={handleNext}>
                         Continuar
                     </Button>
                 </div>
             )}
 
             {step === 2 && (
-                <div className="login-container">
-                    <div className="container">
+                <div className={styles.loginContent}>
+                    <div className={styles.container}>
 
                         <h1>Sua senha</h1>
 
@@ -133,14 +138,14 @@ export default function Login() {
                             }}
                         />
 
-                        {error && <span className="error">{error}</span>}
+                        {error && <span className={styles.error}>{error}</span>}
 
-                        <a href="#" className="forgot-password" onClick={handleForgotPassword}>
+                        <a href="#" className={styles.linkEsqueciSenha} onClick={handleForgotPassword}>
                             Esqueci minha senha
                         </a>
                     </div>
 
-                    <Button className="btn-primary" onClick={handleLogin}>
+                    <Button variant={'primary'} onClick={handleLogin}>
                         Continuar
                     </Button>
                 </div>

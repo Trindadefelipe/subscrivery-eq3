@@ -1,0 +1,25 @@
+.banner {
+  height: 120px;
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #ffffff;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  max-width: 60%;
+}
+
+.banner img {
+  width: 70px;
+  height: auto;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
