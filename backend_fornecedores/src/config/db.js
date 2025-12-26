@@ -13,10 +13,10 @@ const db = mysql.createPool({
     database: process.env.DB_NAME || 'subscrivery',
     port: process.env.DB_PORT || 3306,
     // Só ativa o SSL se estiver conectando ao banco da nuvem
-    ssl: isProduction ? { rejectUnauthorized: false } : null,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+    ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: false
+    }
 });
 
 db.getConnection((err, connection) => {
