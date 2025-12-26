@@ -45,33 +45,73 @@ export const cadastrarFornecedor = async (req, res) => {
 export const loginFornecedor = async (req, res) => {
   const { email, senha } = req.body;
 
+  // Validação de entrada
+  if (!email || !senha) {
+    return res.status(400).json({ erro: "E-mail e senha são obrigatórios." });
+  }
+
   try {
+    // Teste de conexão com o banco
+    console.log('🔍 Tentando conectar ao banco de dados...');
+    console.log('📧 Email recebido:', email);
+    
     const sql = "SELECT * FROM fornecedor WHERE email = ?";
+    console.log('📝 Executando query:', sql);
+    console.log('📝 Com parâmetros:', [email]);
+    
     const [usuarios] = await db.execute(sql, [email]);
+    
+    console.log('✅ Conexão com banco funcionou!');
+    console.log('📊 Usuários encontrados:', usuarios.length);
+    
+    if (usuarios.length > 0) {
+      console.log('👤 Primeiro usuário encontrado - ID:', usuarios[0].id_fornecedor);
+      console.log('👤 Email no banco:', usuarios[0].email);
+      console.log('🔐 Senha hash no banco (primeiros 20 chars):', usuarios[0].senha ? usuarios[0].senha.substring(0, 20) + '...' : 'SENHA NÃO ENCONTRADA');
+    }
 
     if (usuarios.length === 0) {
+      console.log('❌ Nenhum usuário encontrado com este email');
       return res.status(401).json({ erro: "E-mail ou senha incorretos." });
     }
 
     const usuario = usuarios[0];
+    
+    // Verificar se o usuário tem senha no banco
+    if (!usuario.senha) {
+      console.log('❌ Usuário encontrado mas não tem senha cadastrada');
+      return res.status(401).json({ erro: "E-mail ou senha incorretos." });
+    }
+    
+    console.log('🔒 Comparando senhas...');
     const senhaValida = await bcrypt.compare(senha, usuario.senha);
+    console.log('🔒 Resultado da comparação:', senhaValida ? '✅ Senha válida' : '❌ Senha inválida');
 
     if (!senhaValida) {
+      console.log('❌ Senha não confere');
       return res.status(401).json({ erro: "E-mail ou senha incorretos." });
     }
 
+    console.log('✅ Login realizado com sucesso para:', usuario.email);
     return res.status(200).json({
       message: "Login realizado com sucesso!",
       usuario: {
         id: usuario.id_fornecedor,
         nome: usuario.nome_fantasia,
-        foto: usuario.foto_url // Adicione esta linha
+        foto: usuario.foto_url
       }
     });
 
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({ erro: "Erro interno no servidor." });
+    console.error('❌ ERRO no loginFornecedor:');
+    console.error('📋 Tipo do erro:', err.name);
+    console.error('💬 Mensagem:', err.message);
+    console.error('🔢 Código:', err.code);
+    console.error('📚 Stack completo:', err.stack);
+    return res.status(500).json({ 
+      erro: "Erro interno no servidor.",
+      detalhes: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
   }
 };
 
