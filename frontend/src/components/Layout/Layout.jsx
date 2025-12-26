@@ -1,12 +1,15 @@
 import Header from "../Header/Header";
-import Nav from "../Nav/Nav"
+import styles from "./Layout.module.css"
 
 export default function Layout({ children }) {
     return (
-        <>
-            <Header/>
-            <main> {children} </main>
-            <Nav/>
-        </>
+        <div className={styles.layout}>
+            <header className={styles.header}>
+                <Header />
+            </header>
+            <main className={styles.content}>
+                {children}
+            </main>
+        </div>
     );
 }

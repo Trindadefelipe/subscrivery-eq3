@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./Register.css";
+import styles from "./Register.module.css";
 import Input from "../../components/Input/Input";
 import Button from "../../components/Button/Button";
+import VoltarIcon from '../../assets/icons/ROXO/VOLTAR.svg'
 
 export default function Register() {
   const navigate = useNavigate();
@@ -60,19 +61,19 @@ export default function Register() {
 
     try {
       const nome_completo = `${name} ${lastName}`;
-      const resposta = await axios.post('http://localhost:3000/usuarios', {
+      const resposta = await axios.post('http://localhost:3000/auth/cadastro', {
         nome_completo: nome_completo,
         email: email,
         senha: password,
         telefone: phone,
-        cpf: null 
+        cpf: null
       });
 
       alert(resposta.data.mensagem);
       navigate("/plans");
 
     } catch (err) {
-      
+
       setError(err.response?.data?.erro || "Erro ao conectar com o servidor");
     }
   }
@@ -87,18 +88,18 @@ export default function Register() {
   }
 
   return (
-    <div className="register-container">
-      <header className="register-header">
-        <button className="back-btn" onClick={handleBack}>
-          ←
+    <div className={styles.registerContainer}>
+      <header className={styles.registerHeader}>
+        <button onClick={handleBack}>
+          <img src={VoltarIcon} alt="botão de voltar" />
         </button>
         <span>Cadastro</span>
         <div></div>
       </header>
 
       {step === 1 && (
-        <div className="register-container">
-          <div className="container">
+        <div className={styles.registerContent}>
+          <div className={styles.container}>
 
             <h1>Qual é seu e-mail?</h1>
 
@@ -112,18 +113,18 @@ export default function Register() {
               }}
             />
 
-            {error && <span className="error">{error}</span>}
+            {error && <span className={styles.error}>{error}</span>}
           </div>
 
-          <Button className="btn-primary" onClick={handleNext}>
+          <Button variant={'primary'} onClick={handleNext}>
             Continuar
           </Button>
         </div>
       )}
 
       {step === 2 && (
-        <div className="register-container">
-          <div className="container">
+        <div className={styles.registerContent}>
+          <div className={styles.container}>
 
             <h1>Qual é seu celular?</h1>
 
@@ -138,17 +139,17 @@ export default function Register() {
               }}
             />
 
-            {error && <span className="error">{error}</span>}
+            {error && <span className={styles.error}>{error}</span>}
           </div>
-          <Button className="btn-primary" onClick={handleNext}>
+          <Button variant={'primary'} onClick={handleNext}>
             Continuar
           </Button>
         </div>
       )}
 
       {step === 3 && (
-        <div className="register-container">
-          <div className="container">
+        <div className={styles.registerContent}>
+          <div className={styles.container}>
 
             <h1>Agora, escolha uma senha</h1>
             <p className="subtitle">Mínimo de 8 caracteres</p>
@@ -163,18 +164,18 @@ export default function Register() {
               }}
             />
 
-            {error && <span className="error">{error}</span>}
+            {error && <span className={styles.error}>{error}</span>}
           </div>
 
-          <Button className="btn-primary" onClick={handleNext}>
+          <Button variant={'primary'} onClick={handleNext}>
             Continuar
           </Button>
         </div>
       )}
 
       {step === 4 && (
-        <div className="register-container">
-          <div className="container">
+        <div className={styles.registerContent}>
+          <div className={styles.container}>
 
             <h1>Detalhes da conta</h1>
 
@@ -200,8 +201,8 @@ export default function Register() {
 
             <Input type="email" value={email} disabled />
 
-            <div class="terms-container">
-              <div className="container">
+            <div className={styles.termsContainer}>
+              <div className={styles.container}>
                 <Input
                   type="checkbox"
                   className="checkbox"
@@ -210,15 +211,15 @@ export default function Register() {
                 />
               </div>
 
-              <span class="text">
+              <span className="text">
                 Concordo com os <a href="#" target="_blank">Termos & Condições</a> e a <a href="#" target="_blank">Política de Privacidade</a>
               </span>
             </div>
 
-            {error && <span className="error">{error}</span>}
+            {error && <span className={styles.error}>{error}</span>}
           </div>
 
-          <Button className="btn-primary" onClick={handleRegister}>
+          <Button variant={'primary'} onClick={handleRegister}>
             Criar minha conta
           </Button>
         </div>

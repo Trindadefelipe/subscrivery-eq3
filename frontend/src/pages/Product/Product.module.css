@@ -1,0 +1,20 @@
+.container {
+  margin-top: var(--spacing-lg);
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--spacing-sm);
+}
+
+.list {
+  display: flex;
+  gap: var(--spacing-md);
+  overflow-x: auto;
+  padding-bottom: var(--spacing-sm);
+}
+
+.list::-webkit-scrollbar {
+  display: none;
+}

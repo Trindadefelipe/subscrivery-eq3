@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom"
 import Input from "../../components/Input/Input";
-import "./ResetPassword.css";
+import Button from "../../components/Button/Button";
+import styles from "./ResetPassword.module.css";
+
+import VoltarIcon from "../../assets/icons/ROXO/VOLTAR.svg"
+import AjudaIcon from "../../assets/icons/ROXO/AJUDA.svg"
 
 export default function ResetPassword() {
     const navigate = useNavigate();
@@ -46,35 +50,40 @@ export default function ResetPassword() {
     }
 
     return (
-        <div className="reset-password-container">
-            <header className="login-header">
+        <div className={styles.resetContainer}>
+            <header className={styles.resetHeader}>
                 <button className="back-btn">
-                    ←
+                    <img src={VoltarIcon} alt="botão de voltar" />
                 </button>
                 <span>Login</span>
-                <button className="help-btn">?</button>
+                <button className="help-btn">
+                    <img src={AjudaIcon} alt="Botão de ajuda" />
+                </button>
             </header>
 
             {!success ? (
-                <form onSubmit={handleSubmit}>
-                    <Input
-                        type="password"
-                        placeholder="Nova senha"
-                        value={password}
-                        onChange={(e) => {
-                            setPassword(e.target.value);
-                            setError("");
-                        }}
-                    />
+                <form className={styles.resetContent} onSubmit={handleSubmit}>
+                    <div className={styles.container}>
+                        <h1>Redefenir senha</h1>
+                        <Input
+                            type="password"
+                            placeholder="Nova senha"
+                            value={password}
+                            onChange={(e) => {
+                                setPassword(e.target.value);
+                                setError("");
+                            }}
+                        />
+                        {error && <span className={styles.error}>{error}</span>}
+                    </div>
 
-                    {error && <span className="error">{error}</span>}
 
-                    <button className="btn-primary" disabled={loading}>
+                    <Button variant={'primary'} disabled={loading}>
                         {loading ? "Salvando..." : "Redefinir senha"}
-                    </button>
+                    </Button>
                 </form>
             ) : (
-                <>
+                <div className={styles.container}>
                     <p className="success">
                         Senha redefinida com sucesso!
                     </p>
@@ -85,7 +94,7 @@ export default function ResetPassword() {
                     >
                         Ir para login
                     </button>
-                </>
+                </ div>
             )}
         </div>
     )

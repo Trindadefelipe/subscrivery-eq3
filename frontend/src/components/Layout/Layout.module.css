@@ -1,0 +1,36 @@
+:root {
+    --header-height: 3.5rem;
+    --bottom-nav-height: 4rem;
+}
+
+.layout {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: var(--header-height);
+    z-index: 100;
+
+    background-color: var(--color-white);
+}
+
+.content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  padding-top: var(--header-height);
+  padding-bottom: var(--bottom-nav-height);
+
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+

@@ -5,7 +5,7 @@ export function PrivateRoute({children}) {
     const { estaLogado } = useAuth();
 
     if (!estaLogado) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to="/welcome" replace />;
     }
 
     return children;
