@@ -4,7 +4,7 @@ const db = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
+    database: 'subscrivery', // Nome do banco fixado para não cair no 'test'
     port: process.env.DB_PORT || 4000,
     ssl: {
         minVersion: 'TLSv1.2',
