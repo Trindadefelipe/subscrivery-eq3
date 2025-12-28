@@ -90,7 +90,7 @@ export default function Product() {
             </div>
 
             <Button variant="primary" onClick={handleComprar}>
-                R$ {(product.preco * quantity).toFixed(2)}
+                R$ {(Number(product?.preco || 0) * quantity).toFixed(2)}
             </Button>
 
             <h2>Descrição</h2>

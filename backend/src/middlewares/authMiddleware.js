@@ -1,23 +1,34 @@
 import jwt from 'jsonwebtoken';
 
 export const verificarToken = (req, res, next) => {
-   
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; 
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
+    if (!authHeader) {
         return res.status(401).json({ erro: "Acesso negado. Token não fornecido." });
     }
 
-    try {
+ 
+    const parts = authHeader.split(' ');
 
-        const decodificado = jwt.verify(token, process.env.JWT_SECRET);
-        
-        // Adiciona os dados do usuário dentro da requisição para as próximas funções usarem
-        req.usuarioId = decodificado.id;
-        
-        next(); 
-    } catch (err) {
-        res.status(403).json({ erro: "Token inválido ou expirado." });
+    if (parts.length !== 2) {
+        return res.status(401).json({ erro: "Erro no formato do token." });
     }
+
+    const [scheme, token] = parts;
+
+    if (!/^Bearer$/i.test(scheme)) {
+        return res.status(401).json({ erro: "Token malformatado." });
+    }
+
+    const secret = process.env.JWT_SECRET;
+
+    jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+            return res.status(401).json({ erro: "Sessão inválida ou expirada. Faça login novamente." });
+        }
+
+        req.usuarioId = decoded.id; 
+        
+        return next();
+    });
 };

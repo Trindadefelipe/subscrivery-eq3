@@ -1,6 +1,7 @@
 import express from 'express';
-import { criarAssinatura, listarAssinaturaUsuario, atualizarStatusAssinatura,obterHistoricoEntregas} from '../controllers/assinaturaController.js';
 import { verificarToken } from '../middlewares/authMiddleware.js';
+import { criarAssinatura, listarAssinaturaUsuario, atualizarStatusAssinatura,obterHistoricoEntregas} from '../controllers/assinaturaController.js';
+
 
 
 const router = express.Router();

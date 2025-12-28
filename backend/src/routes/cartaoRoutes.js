@@ -1,6 +1,7 @@
 import express from 'express';
-import { salvarCartao, listarCartoes, excluirCartao } from '../controllers/cartaoController.js';
 import { verificarToken } from '../middlewares/authMiddleware.js';
+import { salvarCartao, listarCartoes, excluirCartao } from '../controllers/cartaoController.js';
+
 
 const router = express.Router();
 

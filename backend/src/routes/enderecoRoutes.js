@@ -1,6 +1,7 @@
 import express from 'express';
-import { salvarEndereco, listarEnderecos } from '../controllers/enderecoController.js';
 import { verificarToken } from '../middlewares/authMiddleware.js';
+import { salvarEndereco, listarEnderecos } from '../controllers/enderecoController.js';
+
 
 const router = express.Router();
 
