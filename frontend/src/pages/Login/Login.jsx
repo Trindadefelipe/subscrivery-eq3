@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import {api} from "../../services/api";
 import Button from "../../components/Button/Button"
 import Input from "../../components/Input/Input"
 import styles from "./Login.module.css";
@@ -29,18 +29,16 @@ export default function Login() {
 
         try {
 
-            const resposta = await axios.post('http://localhost:3000/auth/login', {
-                email: email,
+            const {data} = await api.post('auth/login', {
+                email,
                 senha: password
             });
 
             setError("");
-            login(resposta.data.usuario);
-            alert(resposta.data.mensagem);
+            login(data.usuario, data.token);
             navigate("/home");
 
         } catch (err) {
-
             setError(err.response?.data?.erro || "Erro ao conectar com o servidor");
         }
     }
@@ -54,9 +52,7 @@ export default function Login() {
         }
 
         try {
-            const resposta = await axios.post('http://localhost:3000/auth/esqueci-senha', {
-                email: email
-            });
+            const resposta = await api.post('/auth/esqueci-senha', {email});
             alert(resposta.data.mensagem);
         } catch (err) {
             setError(err.response?.data?.erro || "Erro ao processar solicitação");

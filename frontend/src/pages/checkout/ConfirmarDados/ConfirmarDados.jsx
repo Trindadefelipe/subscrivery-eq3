@@ -1,7 +1,10 @@
 import styles from "./ConfirmarDados.module.css";
 import Button from "../../../components/Button/Button";
+import { useNavigate } from "react-router-dom";
 
 export function ConfirmarDados() {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Confirmar dados pessoais</h1>

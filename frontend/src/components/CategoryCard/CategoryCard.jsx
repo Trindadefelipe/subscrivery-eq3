@@ -1,15 +1,18 @@
 import styles from './CategoryCard.module.css';
+import imagem from '../../assets/imgs/image.png';
+import {useNavigate} from 'react-router-dom';
 
 export default function CategoryCard({ data }) {
+    const navigate = useNavigate();
+
     return (
         <div
             className={styles.card}
-            style={{backgroundColor: data.color}}
-            onClick={() => Navigate(`/categoria/${data.id}`)}
+            onClick={() => navigate(`/categoria/${data.id_categoria}`)}
         >
-            <span>{data.name}</span>
+            <span>{data.nome}</span>
 
-            <img src={data.image} alt={data.name} />
+            <img src={imagem} alt={data.nome} />
         </div>
     )
 }

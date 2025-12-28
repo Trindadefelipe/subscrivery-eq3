@@ -5,43 +5,63 @@ import styles from "./Plans.module.css";
 
 export default function Plans() {
   const navigate = useNavigate();
+
   const [plans, setPlans] = useState([]);
   const [selected, setSelected] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function loadPlans() {
-      const res = await api.get("/plans");
-      setPlans(res.data);
+    const loadPlans = async () => {
+      try {
+        const res = await api.get("/plans");
 
-      const recommended = res.data.find(p => p.highlight);
-      setSelected(recommended?.id);
-    }
+        const adaptedPlans = res.data.map(plan => ({
+          id: plan.id_plano,
+          title: plan.nome,
+          price: Number(plan.valor_mensal),
+          benefits: [
+            `Até R$ ${Number(plan.limite_produtos_valor)
+              .toFixed(2)
+              .replace(".", ",")} em produtos`,
+            plan.descricao
+          ],
+          highlight: plan.nome.toLowerCase() === "premium"
+        }));
+
+        setPlans(adaptedPlans);
+
+        const recommended = adaptedPlans.find(p => p.highlight);
+        setSelected(recommended?.id ?? adaptedPlans[0]?.id);
+
+      } catch (error) {
+        console.error("Erro ao carregar planos", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     loadPlans();
   }, []);
 
   function handleSubscribe() {
     if (!selected) return;
-    // fluxo real: salvar escolha e seguir checkout
+
+    localStorage.setItem("selectedPlan", selected)
     navigate("/checkout");
+  }
+
+  if (loading) {
+    return <p className={styles.loading}>Carregando planos...</p>;
   }
 
   return (
     <div className={styles.container}>
-
-      {/* HEADER */}
-      <header className={styles.header}>
-        <button onClick={() => navigate(-1)}>←</button>
-        <span>Faça seu pedido</span>
-        <span>?</span>
-      </header>
-
       {/* INTRO */}
       <section className={styles.intro}>
         <strong>Seja membro</strong>
         <p>
-          Julia, simplifique sua rotina e economize tempo com o clube
-          que abastece sua casa!
+          Simplifique sua rotina e economize tempo com o clube que
+          abastece sua casa!
         </p>
       </section>
 
@@ -50,16 +70,17 @@ export default function Plans() {
         {plans.map(plan => (
           <div
             key={plan.id}
-            className={`${styles.card} ${
-              plan.highlight ? styles.highlight : ""
-            } ${selected === plan.id ? styles.selected : ""}`}
+            className={`${styles.card}
+              ${plan.highlight ? styles.highlight : ""}
+              ${selected === plan.id ? styles.selected : ""}
+            `}
             onClick={() => setSelected(plan.id)}
           >
-            <h2>{plan.name}</h2>
+            <h2>{plan.title}</h2>
 
             <ul>
-              {plan.benefits.map((item, index) => (
-                <li key={index}>{item}</li>
+              {plan.benefits.map((benefit, index) => (
+                <li key={index}>{benefit}</li>
               ))}
             </ul>
 
@@ -78,17 +99,20 @@ export default function Plans() {
       </p>
 
       {/* CTA */}
-      <button className={styles.subscribe} onClick={handleSubscribe}>
+      <button
+        className={styles.subscribe}
+        onClick={handleSubscribe}
+        disabled={!selected}
+      >
         Assinar
       </button>
 
       <span
         className={styles.skip}
-        onClick={() => navigate("/checkout")}
+        onClick={() => navigate("/checkout/endereco")}
       >
-        Não obrigatório(a). Fechar pedido
+        Não obrigado(a). Fechar pedido
       </span>
-
     </div>
   );
 }

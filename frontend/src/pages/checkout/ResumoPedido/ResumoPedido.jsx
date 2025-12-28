@@ -1,37 +1,33 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./ResumoPedido.module.css";
 
 export function ResumoPedido() {
   const navigate = useNavigate();
 
-  const [itens, setItens] = useState([
-    {
-      id: 1,
-      nome: "Ração GranPlus Choice Frango e Carne",
-      preco: 188.62,
-      imagem: "/produtos/racao1.png",
-      quantidade: 1
-    },
-    {
-      id: 2,
-      nome: "Ração GranPlus Choice Frango",
-      preco: 188.62,
-      imagem: "/produtos/racao1.png",
-      quantidade: 1
-    }
-  ]);
-
+  const [itens, setItens] = useState([]);
   const [pagamento, setPagamento] = useState("pix");
 
+  useEffect(() => {
+    const storedItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    if (storedItems.length === 0) {
+      navigate("/home");
+      return;
+    }
+
+    setItens(storedItems);
+  }, [navigate]);
+
   function alterarQuantidade(id, delta) {
-    setItens((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantidade: Math.max(1, item.quantidade + delta) }
-          : item
-      )
+    const atualizados = itens.map((item) =>
+      item.id === id
+        ? { ...item, quantidade: Math.max(1, item.quantidade + delta) }
+        : item
     );
+
+    setItens(atualizados);
+    localStorage.setItem("cartItems", JSON.stringify(atualizados));
   }
 
   const subtotal = itens.reduce(
@@ -40,8 +36,15 @@ export function ResumoPedido() {
   );
 
   const frete = 30.23;
-  const descontos = 15.60;
+  const descontos = 15.6;
   const total = subtotal - descontos + frete;
+
+  function finalizarCompra() {
+    localStorage.setItem("paymentMethod", pagamento);
+    localStorage.setItem("orderTotal", total.toFixed(2));
+
+    navigate("/plans");
+  }
 
   return (
     <div className={styles.container}>
@@ -51,6 +54,7 @@ export function ResumoPedido() {
         {itens.map((item) => (
           <div key={item.id} className={styles.item}>
             <img src={item.imagem} alt={item.nome} />
+
             <div className={styles.info}>
               <p>{item.nome}</p>
               <span>R$ {item.preco.toFixed(2)}</span>
@@ -98,10 +102,12 @@ export function ResumoPedido() {
           <span>Produtos</span>
           <span>R$ {subtotal.toFixed(2)}</span>
         </div>
+
         <div className={styles.totalLinha}>
           <span>Descontos</span>
           <span>- R$ {descontos.toFixed(2)}</span>
         </div>
+
         <div className={styles.totalLinha}>
           <span>Frete</span>
           <span>R$ {frete.toFixed(2)}</span>
@@ -113,7 +119,7 @@ export function ResumoPedido() {
         </div>
       </section>
 
-      <button className={styles.finalizar}>
+      <button className={styles.finalizar} onClick={finalizarCompra}>
         Comprar como membro
       </button>
     </div>

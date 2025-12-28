@@ -1,20 +1,36 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-    const [estaLogado, setEstaLogado] = useState(true);
+    const [user, setUser] = useState(null);
+    const [token, setToken] = useState(null);
 
-    function login() {
-        setEstaLogado(true);
+    useEffect(() => {
+        const storedUser = localStorage.getItem('user');
+        const storedToken = localStorage.getItem('token');
+
+        if (storedUser && storedToken) {
+            setUser(JSON.parse(storedUser));
+            setToken(storedToken);
+        }
+    }, [])
+
+    function login(userData, token) {
+        setUser(userData);
+        setToken(token);
+
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem('token', token);
     }
 
     function logout() {
-        setEstaLogado(false);
+        setUser(null);
+        setToken(null);
     }
 
     return (
-        <AuthContext.Provider value ={{ estaLogado, login, logout}}>
+        <AuthContext.Provider value ={{ user, token, login, logout}}>
             {children}
         </AuthContext.Provider>
     )

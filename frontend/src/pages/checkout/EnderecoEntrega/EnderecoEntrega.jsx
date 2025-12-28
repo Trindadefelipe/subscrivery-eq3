@@ -1,36 +1,44 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../../services/api";
 import styles from "./EnderecoEntrega.module.css";
 
 export function EnderecoEntrega() {
     const navigate = useNavigate();
 
     const [endereco, setEndereco] = useState({
-        pais: "Brasil",
-        nome: "",
-        telefone: "",
-        cep: "",
-        rua: "",
+        logradouro: "",
         numero: "",
-        complemento: "",
-        estado: "",
-        cidade: "",
         bairro: "",
-        cpf: "",
-        principal: true
+        cidade: "",
+        cep: ""
     });
 
     function handleChange(e) {
         const { name, value } = e.target;
-        setEndereco({ ...endereco, [name]: value });
+        setEndereco(prev => ({ ...prev, [name]: value }));
     }
 
-    function handleSalvar() {
-        // futuramente: api.post("/enderecos", endereco)
+    async function handleSalvar() {
+        try {
+            const response = await api.post("/enderecos", {
+                logradouro: endereco.logradouro,
+                numero: endereco.numero,
+                bairro: endereco.bairro,
+                cidade: endereco.cidade,
+                cep: endereco.cep
+            });
 
-        navigate("/checkout/pagamento", {
-            state: { endereco }
-        });
+            alert("Endereço salvo com sucesso!");
+
+            navigate("/checkout/pagamento", {
+                state: { endereco }
+            });
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao salvar endereço");
+        }
     }
 
     return (
@@ -38,32 +46,40 @@ export function EnderecoEntrega() {
             <div className={styles.card}>
                 <h2>Adicionar endereço</h2>
 
-                <select name="pais" value={endereco.pais} onChange={handleChange}>
-                    <option>Brasil</option>
-                </select>
+                <input
+                    name="cep"
+                    placeholder="CEP"
+                    value={endereco.cep}
+                    onChange={handleChange}
+                />
 
-                <input name="nome" placeholder="Nome completo" onChange={handleChange} />
-                <input name="telefone" placeholder="Número de telefone BR+55" onChange={handleChange} />
-                <input name="cep" placeholder="CEP" onChange={handleChange} />
-                <input name="rua" placeholder="Rua/Avenida" onChange={handleChange} />
-                <input name="numero" placeholder="Número" onChange={handleChange} />
-                <input name="complemento" placeholder="Complemento" onChange={handleChange} />
-                <input name="estado" placeholder="Estado" onChange={handleChange} />
-                <input name="cidade" placeholder="Cidade" onChange={handleChange} />
-                <input name="bairro" placeholder="Bairro" onChange={handleChange} />
-                <input name="cpf" placeholder="CPF" onChange={handleChange} />
+                <input
+                    name="logradouro"
+                    placeholder="Rua / Avenida"
+                    value={endereco.logradouro}
+                    onChange={handleChange}
+                />
 
-                <label className={styles.switch}>
-                    <input
-                        type="checkbox"
-                        checked={endereco.principal}
-                        onChange={() =>
-                            setEndereco({ ...endereco, principal: !endereco.principal })
-                        }
-                    />
-                    <span />
-                    Esse é meu endereço principal
-                </label>
+                <input
+                    name="numero"
+                    placeholder="Número"
+                    value={endereco.numero}
+                    onChange={handleChange}
+                />
+
+                <input
+                    name="bairro"
+                    placeholder="Bairro"
+                    value={endereco.bairro}
+                    onChange={handleChange}
+                />
+
+                <input
+                    name="cidade"
+                    placeholder="Cidade"
+                    value={endereco.cidade}
+                    onChange={handleChange}
+                />
             </div>
 
             <button className={styles.salvar} onClick={handleSalvar}>

@@ -10,32 +10,43 @@ import styles from './Home.module.css';
 export default function Home() {
     const [products, setProducts] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
 
     useEffect(() => {
-        async function loadData() {
-            const [productsRes, catergoriesRes] =
-                await Promise.all([
+        const loadData = async () => {
+            try {
+                setLoading(true);
+
+                const [productsRes, categoriesRes] = await Promise.all([
                     api.get("/produtos"),
                     api.get("/categorias")
-                ])
-            setProducts(productsRes);
-            setCategories(catergoriesRes);
-        }
+                ]);
+
+                setProducts(productsRes.data);
+                setCategories(categoriesRes.data);
+
+            } catch (err) {
+                console.error(err);
+                setError("Erro ao carregar dados");
+            } finally {
+                setLoading(false);
+            }
+        };
 
         loadData();
     }, []);
-
-    console.log(categories);
 
     return (
         <div className={styles.container}>
 
             <div className={styles.banners}>
-                <div className={styles.banner} style={{backgroundColor:"#018263"}}>
+                <div className={styles.banner} style={{ backgroundColor: "#018263" }}>
                     <h3>Ofertas de Natal</h3>
                     <img src={imagem} alt="imagem" />
                 </div>
-                <div className={styles.banner} style={{backgroundColor:"#FF40AC"}}>
+                <div className={styles.banner} style={{ backgroundColor: "#FF40AC" }}>
                     <h3>Ofertas de Natal</h3>
                     <img src={imagem} alt="imagem" />
                 </div>
@@ -45,14 +56,14 @@ export default function Home() {
             <div className={styles.products}>
 
                 {products.map(product => (
-                    <ProductCard key={product.id} data={product} />
+                    <ProductCard key={product.id_produto} data={product} />
                 ))}
             </div>
 
-            <h2 className={styles.sectionTitle}>Recomendados</h2>
+            <h2 className={styles.sectionTitle}>Categorias</h2>
             <div className={styles.categories}>
                 {categories.map(category => (
-                    <CategoryCard key={category.id} data={category} />
+                    <CategoryCard key={category.id_categoria} data={category} />
                 ))}
             </div>
 

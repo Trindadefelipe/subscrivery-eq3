@@ -1,21 +1,26 @@
 .card {
-  min-width: 140px;
-  height: 100px;
+  min-width: 150px;
+  height: 150px;
   border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
+  padding: var(--spacing-5) var(--spacing-3);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  color: #ffffff;
+  align-items: flex-start;
   font-weight: 600;
   position: relative;
   overflow: hidden;
+  background-color: #FFD139;
+}
+
+.card span {
+  color: var(--color-gray);
+  font-size: var(--font-size-xl);
 }
 
 .card img {
-  width: 60px;
+  width: 100px;
   height: auto;
   position: absolute;
   bottom: 0;
-  right: 8px;
+  right: 0;
 }

@@ -1,109 +1,77 @@
 .container {
-  height: 100vh;
-  background: #f9fafb;
-  display: flex;
-  flex-direction: column;
+  padding: 16px;
 }
-
-/* -------- HEADER -------- */
-
-.header {
-  height: 56px;
-  background: #5b21b6;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 var(--spacing-md);
-  font-size: 0.9rem;
-}
-
-/* -------- INTRO -------- */
 
 .intro {
-  background: white;
-  margin: var(--spacing-md);
-  padding: var(--spacing-md);
-  border-radius: var(--radius-lg);
+  background: #fff;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
 }
-
-.intro strong {
-  display: block;
-  margin-bottom: 4px;
-}
-
-.intro p {
-  font-size: 0.75rem;
-  color: var(--color-muted);
-}
-
-/* -------- PLANOS -------- */
 
 .plans {
   display: flex;
-  gap: var(--spacing-md);
-  padding: 0 var(--spacing-md);
-  margin-bottom: var(--spacing-md);
+  gap: 16px;
+  overflow-x: auto;
 }
 
 .card {
-  flex: 1;
-  background: white;
-  border-radius: var(--radius-lg);
-  padding: var(--spacing-md);
-  min-height: 240px;
+  min-width: 220px;
+  height: 350px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 20px;
+  cursor: pointer;
+  border: 2px solid transparent;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .card h2 {
-  font-size: 1.3rem;
-  margin-bottom: var(--spacing-sm);
+  font-size: 28px;
 }
 
 .card ul {
-  font-size: 0.75rem;
-  margin-bottom: auto;
+  margin: 16px 0;
+  list-style: none;
 }
 
 .card strong {
-  margin-top: var(--spacing-md);
+  display: block;
+  margin-top: 24px;
+  font-size: 18px;
 }
 
-/* -------- DESTAQUES -------- */
-
 .highlight {
-  background: linear-gradient(180deg, #d8b4fe, #f0abfc);
+  background: linear-gradient(180deg, #d7b4ff, #c89bff);
 }
 
 .selected {
-  outline: 2px solid #5b21b6;
+  border-color: #6b3cc9;
 }
-
-/* -------- TERMOS -------- */
-
-.terms {
-  font-size: 0.65rem;
-  color: var(--color-muted);
-  padding: 0 var(--spacing-md);
-  margin-bottom: var(--spacing-md);
-}
-
-/* -------- CTA -------- */
 
 .subscribe {
-  margin: 0 var(--spacing-md);
-  padding: 14px;
-  border-radius: var(--radius-lg);
-  background: #5b21b6;
-  color: white;
+  width: 100%;
+  height: 56px;
+  border-radius: 28px;
+  background: #5e2ca5;
+  color: #fff;
+  font-size: 16px;
   border: none;
-  font-weight: 600;
+  margin-top: 24px;
 }
 
 .skip {
-  margin-top: var(--spacing-sm);
-  font-size: 0.7rem;
+  display: block;
   text-align: center;
-  color: var(--color-muted);
+  margin-top: 12px;
+  font-size: 14px;
+  color: #555;
+}
+
+.terms {
+  font-size: 12px;
+  color: #777;
+  margin-top: 16px;
 }

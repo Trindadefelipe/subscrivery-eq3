@@ -2,9 +2,9 @@ import { Navigate } from "react-router-dom";
 import {useAuth} from "../contexts/AuthContext";
 
 export function PrivateRoute({children}) {
-    const { estaLogado } = useAuth();
+    const { user } = useAuth();
 
-    if (!estaLogado) {
+    if (false) {
         return <Navigate to="/welcome" replace />;
     }
 

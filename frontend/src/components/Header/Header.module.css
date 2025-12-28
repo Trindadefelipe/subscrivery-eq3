@@ -18,21 +18,8 @@
     width: 25px;
 }
 
-.searchBox {
-    flex: 1;
-    position: relative;
-}
-
-.searchBox input {
-    width: 100%;
-    background-color: #fff;
-}
-
-.searchIcon {
-    width: 25px;
-    height: 25px;
-    position: absolute;
-    right: 12px;
-    top: 50%;
-    transform: translateY(-50%);
+.title {
+    font-family: var(--font-family-heading);
+    color: var(--color-white);
+    font-size: var(--font-size-3xl);
 }
