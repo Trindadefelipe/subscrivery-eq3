@@ -40,7 +40,7 @@ const Produtos = () => {
 
   const carregarCategorias = async () => {
     try {
-      const response = await api.get('/categorias'); 
+      const response = await api.get('/categorias');
       setCategorias(response.data);
     } catch (error) {
       console.error("Erro ao carregar o rol de categorias:", error);
@@ -187,17 +187,23 @@ const Produtos = () => {
             <form onSubmit={handleSalvarAlteracoes}>
               <input type="text" placeholder="Nome" value={novoProduto.nome} required
                 onChange={e => setNovoProduto({ ...novoProduto, nome: e.target.value })} />
-              
-              <select 
-                className="modal-select" 
-                value={novoProduto.categoria} 
+
+              <select
+                className="modal-select"
+                value={novoProduto.categoria}
                 required
                 onChange={e => setNovoProduto({ ...novoProduto, categoria: e.target.value })}
               >
                 <option value="">Selecione a Categoria</option>
-                {categorias.map(cat => (
-                  <option key={cat.id_categoria} value={cat.id_categoria}>{cat.nome}</option>
-                ))}
+                {categorias && categorias.length > 0 ? (
+                  categorias.map(cat => (
+                    <option key={cat.id_categoria} value={cat.id_categoria}>
+                      {cat.nome}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>Carregando categorias...</option>
+                )}
               </select>
 
               <input type="number" step="0.01" placeholder="Preço" value={novoProduto.preco} required
