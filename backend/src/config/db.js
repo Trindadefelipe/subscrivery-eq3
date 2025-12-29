@@ -1,18 +1,14 @@
 const mysql = require('mysql2');
-
-const db = mysql.createConnection({
-  host: 'localhost',
-  user: 'root', 
-  password: '', 
-  database: 'subscrivery' 
+const db = mysql.createPool({
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: 'subscrivery', 
+    port: process.env.DB_PORT || 4000,
+    ssl: {
+        minVersion: 'TLSv1.2',
+        rejectUnauthorized: false
+    }
 });
 
-db.connect((err) => {
-  if (err) {
-    console.error('Erro de conexão com o Banco de Dados:', err);
-    return;
-  }
-  console.log('Conexão com o Banco de Dados estabelecida com sucesso!');
-});
-
-module.exports = db;
+export default db.promise();
