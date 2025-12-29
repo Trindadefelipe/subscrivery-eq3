@@ -1,13 +1,14 @@
 import db from '../config/db.js';
 
 export const cadastrarProduto = async (req, res) => {
-    const { nome, descricao, preco, imagem_url, categoria, id_fornecedor } = req.body;
+   
+    const { nome, descricao, preco, imagem_url, id_categoria, id_fornecedor } = req.body;
     try {
         const query = `
-            INSERT INTO produto (nome, descricao, preco, imagem_url, categoria, id_fornecedor) 
+            INSERT INTO produto (nome, descricao, preco, imagem_url, fk_id_categoria, id_fornecedor) 
             VALUES (?, ?, ?, ?, ?, ?)
         `;
-        await db.execute(query, [nome, descricao, preco, imagem_url, categoria, id_fornecedor]);
+        await db.execute(query, [nome, descricao, preco, imagem_url, id_categoria, id_fornecedor]);
         res.status(201).json({ message: "Produto averbado com sucesso!" });
     } catch (error) {
         res.status(500).json({ error: "Erro ao registrar o objeto no banco." });

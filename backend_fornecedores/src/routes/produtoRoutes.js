@@ -8,4 +8,5 @@ router.patch('/:id_produto/inativar', produtoController.inativarProduto);
 router.put('/:id_produto/atualizar', produtoController.atualizarProduto);
 router.patch('/:id_produto/reativar', produtoController.reativarProduto);
 
+
 export default router;

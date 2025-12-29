@@ -6,11 +6,11 @@ import './Produtos.css';
 import '../Dashboard/dashboard.css';
 
 const Produtos = () => {
-  const [todosProdutos, setTodosProdutos] = useState([]); 
+  const [todosProdutos, setTodosProdutos] = useState([]);
   const [produtosFiltrados, setProdutosFiltrados] = useState([]);
   const [filtroTexto, setFiltroTexto] = useState('');
-  const [filtroStatus, setFiltroStatus] = useState('ativos'); 
-  
+  const [filtroStatus, setFiltroStatus] = useState('ativos');
+  const [categorias, setCategorias] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [produtoIdAtual, setProdutoIdAtual] = useState(null);
@@ -44,8 +44,8 @@ const Produtos = () => {
   useEffect(() => {
     const resultado = todosProdutos.filter(p => {
       const statusMatch = filtroStatus === 'ativos' ? p.ativo !== 0 : p.ativo === 0;
-      const textoMatch = p.nome.toLowerCase().includes(filtroTexto.toLowerCase()) || 
-                         (p.categoria && p.categoria.toLowerCase().includes(filtroTexto.toLowerCase()));
+      const textoMatch = p.nome.toLowerCase().includes(filtroTexto.toLowerCase()) ||
+        (p.categoria && p.categoria.toLowerCase().includes(filtroTexto.toLowerCase()));
       return statusMatch && textoMatch;
     });
     setProdutosFiltrados(resultado);
@@ -101,6 +101,33 @@ const Produtos = () => {
     } catch (error) {
       exibirNotificacao("Erro ao salvar alterações no banco.", "erro");
     }
+
+    const buscarCategorias = async () => {
+      try {
+        const res = await api.get('/categorias');
+        setCategorias(res.data);
+      } catch (err) {
+        console.error("Erro ao carregar categorias.");
+      }
+    };
+
+    useEffect(() => {
+      buscarCategorias();
+      if (idFornecedor) buscarAcervo();
+    }, [idFornecedor]);
+
+    const carregarCategorias = async () => {
+      try {
+        const response = await api.get('/categorias'); // Ajuste conforme sua rota
+        setCategorias(response.data);
+      } catch (error) {
+        console.error("Erro ao carregar o rol de categorias:", error);
+      }
+    };
+
+    useEffect(() => {
+      carregarCategorias();
+    }, []);
   };
 
   return (
@@ -125,16 +152,16 @@ const Produtos = () => {
 
           <div className="header-secao">
             <h2>Gestão de Acervo Comercial</h2>
-            <button onClick={() => { setIsEditing(false); setNovoProduto({nome:'', descricao:'', preco:'', imagem_url:'', categoria:''}); setShowModal(true); }} className="btn-save">
+            <button onClick={() => { setIsEditing(false); setNovoProduto({ nome: '', descricao: '', preco: '', imagem_url: '', categoria: '' }); setShowModal(true); }} className="btn-save">
               <i className="fas fa-plus"></i> Novo Item
             </button>
           </div>
 
           <div className="filtros-container">
             <div className="search-box">
-              <input 
-                type="text" 
-                placeholder="Pesquisar por nome ou categoria..." 
+              <input
+                type="text"
+                placeholder="Pesquisar por nome ou categoria..."
                 value={filtroTexto}
                 onChange={(e) => setFiltroTexto(e.target.value)}
               />
@@ -155,8 +182,8 @@ const Produtos = () => {
                   <p className="preco">{new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(p.preco)}</p>
                   <div className="produto-acoes">
                     <button onClick={() => handleAbrirEdicao(p)} className="btn-edit-small" title="Editar"><i className="fas fa-edit"></i></button>
-                    <button 
-                      onClick={() => handleMudarStatus(p.id_produto, p.ativo)} 
+                    <button
+                      onClick={() => handleMudarStatus(p.id_produto, p.ativo)}
                       className={p.ativo === 0 ? "btn-activate-small" : "btn-delete-small"}
                       title={p.ativo === 0 ? "Reativar" : "Inativar"}
                     >
@@ -175,16 +202,16 @@ const Produtos = () => {
           <div className="modal-content">
             <h3>{isEditing ? 'Retificar Produto' : 'Cadastrar Novo Produto'}</h3>
             <form onSubmit={handleSalvarAlteracoes}>
-              <input type="text" placeholder="Nome" value={novoProduto.nome} required 
-                onChange={e => setNovoProduto({...novoProduto, nome: e.target.value})} />
+              <input type="text" placeholder="Nome" value={novoProduto.nome} required
+                onChange={e => setNovoProduto({ ...novoProduto, nome: e.target.value })} />
               <input type="text" placeholder="Categoria" value={novoProduto.categoria}
-                onChange={e => setNovoProduto({...novoProduto, categoria: e.target.value})} />
-              <input type="number" step="0.01" placeholder="Preço" value={novoProduto.preco} required 
-                onChange={e => setNovoProduto({...novoProduto, preco: e.target.value})} />
+                onChange={e => setNovoProduto({ ...novoProduto, categoria: e.target.value })} />
+              <input type="number" step="0.01" placeholder="Preço" value={novoProduto.preco} required
+                onChange={e => setNovoProduto({ ...novoProduto, preco: e.target.value })} />
               <input type="text" placeholder="URL da Imagem" value={novoProduto.imagem_url}
-                onChange={e => setNovoProduto({...novoProduto, imagem_url: e.target.value})} />
+                onChange={e => setNovoProduto({ ...novoProduto, imagem_url: e.target.value })} />
               <textarea placeholder="Descrição" value={novoProduto.descricao}
-                onChange={e => setNovoProduto({...novoProduto, descricao: e.target.value})} />
+                onChange={e => setNovoProduto({ ...novoProduto, descricao: e.target.value })} />
               <div className="modal-actions">
                 <button type="button" onClick={() => setShowModal(false)} className="btn-cancel">Cancelar</button>
                 <button type="submit" className="btn-confirm">{isEditing ? 'Salvar Alterações' : 'Averbar Produto'}</button>
