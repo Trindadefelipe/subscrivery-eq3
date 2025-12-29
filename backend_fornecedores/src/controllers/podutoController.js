@@ -18,7 +18,14 @@ export const cadastrarProduto = async (req, res) => {
 export const listarProdutosFornecedor = async (req, res) => {
     const { idFornecedor } = req.query;
     try {
-        const [produtos] = await db.execute('SELECT * FROM produto WHERE id_fornecedor = ?', [idFornecedor]);
+     
+        const query = `
+            SELECT p.*, c.nome as categoria_nome 
+            FROM produto p
+            LEFT JOIN categoria c ON p.fk_id_categoria = c.id_categoria
+            WHERE p.id_fornecedor = ?
+        `;
+        const [produtos] = await db.execute(query, [idFornecedor]);
         res.json(produtos);
     } catch (error) {
         res.status(500).json({ error: "Erro ao consultar o acervo." });

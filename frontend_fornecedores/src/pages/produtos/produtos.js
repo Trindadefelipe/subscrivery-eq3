@@ -116,19 +116,20 @@ const Produtos = () => {
       if (idFornecedor) buscarAcervo();
     }, [idFornecedor]);
 
-    const carregarCategorias = async () => {
-      try {
-        const response = await api.get('/categorias'); // Ajuste conforme sua rota
-        setCategorias(response.data);
-      } catch (error) {
-        console.error("Erro ao carregar o rol de categorias:", error);
-      }
-    };
-
-    useEffect(() => {
-      carregarCategorias();
-    }, []);
   };
+
+  const carregarCategorias = async () => {
+    try {
+      const response = await api.get('/categorias'); 
+      setCategorias(response.data);
+    } catch (error) {
+      console.error("Erro ao carregar o rol de categorias:", error);
+    }
+  };
+
+  useEffect(() => {
+    carregarCategorias();
+  }, []);
 
   return (
     <div className="dashboard-container">
