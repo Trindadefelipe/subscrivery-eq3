@@ -1,0 +1,15 @@
+import Header from "../Header/Header";
+import styles from "./Layout.module.css"
+
+export default function Layout({ children }) {
+    return (
+        <div className={styles.layout}>
+            <header className={styles.header}>
+                <Header />
+            </header>
+            <main className={styles.content}>
+                {children}
+            </main>
+        </div>
+    );
+}

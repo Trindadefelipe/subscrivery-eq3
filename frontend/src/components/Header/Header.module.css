@@ -1,0 +1,25 @@
+.searchHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--spacing-4);
+    background-color: var(--color-primary);
+    padding: var(--spacing-2);
+}
+
+.iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.iconButton img {
+    height: 25px;
+    width: 25px;
+}
+
+.title {
+    font-family: var(--font-family-heading);
+    color: var(--color-white);
+    font-size: var(--font-size-3xl);
+}

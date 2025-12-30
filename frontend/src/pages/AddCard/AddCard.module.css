@@ -1,0 +1,53 @@
+.container {
+  min-height: 100vh;
+  padding: 20px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  background: #e0e0e0;
+  font-size: 0.9rem;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+}
+
+.saveCard {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+}
+
+.button {
+  margin-top: auto;
+  background: #5b2ca0;
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 16px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
