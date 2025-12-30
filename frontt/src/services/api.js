@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-baseURL: 'https://subscrivery-backend.onrender.com/api'
+  baseURL: 'https://subscrivery-eq3-nsv4.vercel.app/api'
 });
 
 export default api;
