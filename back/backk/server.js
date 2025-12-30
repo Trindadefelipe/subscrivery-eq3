@@ -25,8 +25,10 @@ app.use((err, req, res, next) => {
     res.status(500).json({ error: "Erro interno no processamento da demanda." });
 });
 
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log("Conexão com o Banco de Dados estabelecida com sucesso!");
 });
+
+module.exports = app;
