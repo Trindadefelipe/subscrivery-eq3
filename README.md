@@ -2,7 +2,7 @@
 
 > Solução completa para consumo recorrente de produtos através de assinaturas personalizadas.
 
-![Status do Projeto](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow)
+![Status do Projeto](https://img.shields.io/badge/Status-Concluído-green)
 ![NodeJS](https://img.shields.io/badge/Back--End-Node.js%20%2F%20Express-green)
 ![MySQL](https://img.shields.io/badge/Database-MySQL-orange)
 ![React](https://img.shields.io/badge/Front--End-React-blue)
