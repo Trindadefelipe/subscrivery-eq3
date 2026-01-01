@@ -24,7 +24,7 @@ O sistema permite:
 
 Você pode acessar a versão online da aplicação rodando em produção através do link abaixo:
 
-👉 **[Acessar Subscrivery (Vercel)](Em adamento...)**
+👉 **[Acessar Subscrivery (Vercel)](https://subscrivery-eq3-lfpg.vercel.app/home)**
 
 ## 🔗 Link da Aplicação (Deploy) - Fornecedores
 
@@ -40,7 +40,7 @@ Para testar as funcionalidades de acesso restrito (Área do Parceiro/Fornecedor)
 
 | Tipo | E-mail | Senha |
 | :--- | :--- | :--- |
-| **Parceiro (Em andamento...)** | `Em andamento...` | `Em andamento...` |
+| **Cliente (Teste)** | `rone@gmail.com` | `123456789` |
 
 ## 🔐 Credenciais de Teste - Fornecedores
 
